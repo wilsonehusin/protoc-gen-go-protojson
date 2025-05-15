@@ -16,4 +16,4 @@ Various reasons which makes this desirable:
 
 ## Acknowledgements
 
-I managed to finish the first _usable_ version of this project in an evening thanks to a tutorial by @ericchiang: [Protobuf generators for fun and profit](https://ericchiang.github.io/post/protoc-plugins/).
+I managed to finish the first _usable_ version of this project in an evening thanks to a tutorial by [@ericchiang](https://github.com/ericchiang): [Protobuf generators for fun and profit](https://ericchiang.github.io/post/protoc-plugins/).
