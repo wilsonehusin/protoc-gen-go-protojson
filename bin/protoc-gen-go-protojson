@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+dirname=$(dirname $0)/..
+
+pushd "${dirname}" > /dev/null
+  go run . $@
+popd > /dev/null
