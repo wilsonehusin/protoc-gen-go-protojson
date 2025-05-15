@@ -32,4 +32,5 @@ changelog:
       - "^docs:"
       - "^test:"
       - "^ci:"
-      - "^tool[s?]:"
+      - "^tools:"
+      - "^tool:"
