@@ -1,0 +1,93 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "*"
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: stable
+          cache-dependency-path: |
+             go.sum
+             bin/_tools/golangci-lint.go.sum
+      - name: Install golangci-lint
+        run: |
+          bin/golangci-lint version
+      - name: Lint
+        run: |
+          bin/golangci-lint run --out-format=colored-line-number
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: stable
+          cache-dependency-path: |
+             go.sum
+             _example/go.sum
+      - name: Generate example
+        run: |
+          pushd _example
+          go mod tidy
+          go generate ./...
+          go mod tidy
+      - name: Test
+        run: |
+          pushd _example
+          go test -v ./...
+      - uses: chainguard-dev/actions/nodiff@0cda751b114eb55c388e88f7479292668165602a # v1.0.2
+        with:
+          path: _example
+          fixup-command: go generate ./...
+
+  build:
+    needs:
+      - lint
+      - test
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: stable
+          cache-dependency-path: |
+             go.sum
+             bin/_tools/goreleaser.go.sum
+      - name: Install GoReleaser
+        run: |
+          bin/goreleaser --version
+      - name: Build and release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SHOULD_RELEASE: startsWith(github.ref, 'refs/tags/')
+        run: |
+          if [[ "${{ env.SHOULD_RELEASE }}" == "true" ]]; then
+            echo "::notice :: Release mode"
+            bin/goreleaser release --clean
+          else
+            echo "::notice :: Snapshot mode"
+            GITHUB_TOKEN=x bin/goreleaser --snapshot --clean
+          fi
