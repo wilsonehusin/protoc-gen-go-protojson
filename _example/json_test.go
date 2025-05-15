@@ -9,21 +9,22 @@ import (
 	acmev1 "_/internal/pb/acme/v1"
 
 	"github.com/google/go-cmp/cmp"
+	"google.golang.org/protobuf/proto"
 )
 
 func TestProtoJSON(t *testing.T) {
 	t.Run("acme.v1.Example", func(t *testing.T) {
 		t.Parallel()
-		EachFile[acmev1.Example](t, "testdata/acme.v1.Example")
+		EachFile[*acmev1.Example](t, "testdata/acme.v1.Example")
 	})
 
 	t.Run("acme.v1.SomethingElse", func(t *testing.T) {
 		t.Parallel()
-		EachFile[acmev1.SomethingElse](t, "testdata/acme.v1.SomethingElse")
+		EachFile[*acmev1.SomethingElse](t, "testdata/acme.v1.SomethingElse")
 	})
 }
 
-func EachFile[P any](t *testing.T, baseDir string) {
+func EachFile[P proto.Message](t *testing.T, baseDir string) {
 	t.Helper()
 	files, err := os.ReadDir(baseDir)
 	if err != nil {
