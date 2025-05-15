@@ -1,0 +1,8 @@
+{
+  "email": "my@company.com",
+  "nestedExample": [
+    {
+      "phoneNumber": 1234567890
+    }
+  ]
+}

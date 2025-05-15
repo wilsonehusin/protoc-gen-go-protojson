@@ -1,0 +1,21 @@
+version: v2
+clean: true
+managed:
+  enabled: true
+  override:
+    - file_option: go_package_prefix
+      value: _
+plugins:
+  # Build proto messages
+  - local: ../bin/protoc-gen-go
+    out: internal/pb
+    opt:
+      - paths=source_relative
+      - default_api_level=API_OPAQUE
+  # Add protojson support
+  - local: ../bin/protoc-gen-go-protojson
+    out: internal/pb
+    opt:
+      - paths=source_relative
+inputs:
+  - directory: proto
