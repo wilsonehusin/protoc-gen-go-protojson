@@ -1,3 +1,3 @@
 package example
 
-//go:generate buf generate
+//go:generate ../bin/buf generate
