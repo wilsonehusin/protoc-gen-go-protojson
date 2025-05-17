@@ -8,6 +8,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"google.golang.org/protobuf/proto"
@@ -69,6 +70,13 @@ func generate(req *pluginpb.CodeGeneratorRequest) (*pluginpb.CodeGeneratorRespon
 	}
 
 	for _, protofile := range req.GetProtoFile() {
+		// Skip files that are not in the request. Technically we should be
+		// looping over req.GetFileToGenerate() and then fetch the protofile
+		// by name, but this is more convenient for now.
+		if !slices.Contains(req.GetFileToGenerate(), protofile.GetName()) {
+			continue
+		}
+
 		var buf bytes.Buffer
 		pkg := protofile.GetOptions().GetGoPackage()
 		path, base, _ := strings.Cut(pkg, ";")
@@ -91,7 +99,7 @@ func generate(req *pluginpb.CodeGeneratorRequest) (*pluginpb.CodeGeneratorRespon
 			return nil, fmt.Errorf("executing template: %w", err)
 		}
 
-		name, _, _ := strings.Cut(protofile.GetName(), ".")
+		name, _, _ := strings.Cut(protofile.GetName(), ".proto")
 		name += ".protojson.go"
 
 		// Return a file to protoc to write.
