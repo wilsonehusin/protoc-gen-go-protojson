@@ -7,6 +7,7 @@ import (
 	"html/template"
 	"io"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"google.golang.org/protobuf/proto"
@@ -71,6 +72,9 @@ func generate(req *pluginpb.CodeGeneratorRequest) (*pluginpb.CodeGeneratorRespon
 		var buf bytes.Buffer
 		pkg := protofile.GetOptions().GetGoPackage()
 		path, base, _ := strings.Cut(pkg, ";")
+		if base == "" {
+			base = filepath.Base(path)
+		}
 		v := &Values{
 			GoPackageName: base,
 			GoPackagePath: path,

@@ -1,0 +1,8 @@
+edition = "2023";
+
+//buf:lint:ignore PACKAGE_VERSION_SUFFIX
+package acme.v1.unversioned;
+
+message ExampleUnversioned {
+  string name = 1;
+}

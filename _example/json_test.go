@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	acmev1 "_/internal/pb/acme/v1"
+	"_/internal/pb/acme/v1/unversioned"
 
 	"github.com/google/go-cmp/cmp"
 	"google.golang.org/protobuf/proto"
@@ -15,12 +16,17 @@ import (
 func TestProtoJSON(t *testing.T) {
 	t.Run("acme.v1.Example", func(t *testing.T) {
 		t.Parallel()
-		EachFile[*acmev1.Example](t, "testdata/acme.v1.Example")
+		EachFile[*acmev1.Example](t, "testdata/acme.v1/Example")
 	})
 
 	t.Run("acme.v1.SomethingElse", func(t *testing.T) {
 		t.Parallel()
-		EachFile[*acmev1.SomethingElse](t, "testdata/acme.v1.SomethingElse")
+		EachFile[*acmev1.SomethingElse](t, "testdata/acme.v1/SomethingElse")
+	})
+
+	t.Run("acme.v1.unversioned.ExampleUnversioned", func(t *testing.T) {
+		t.Parallel()
+		EachFile[*unversioned.ExampleUnversioned](t, "testdata/acme.v1.unversioned/ExampleUnversioned")
 	})
 }
 
